@@ -2,12 +2,20 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
+import re
 from typing import Any
 
 from . import config
 from .engagement import Classification, Engagement
+
+
+def resource_suffix(engagement_id: str) -> str:
+    """Globally unique, name-safe suffix for storage, Key Vault and Azure OpenAI names (<= 18 characters)."""
+    alnum = re.sub(r"[^a-z0-9]", "", engagement_id)[:14]
+    return alnum + hashlib.sha256(engagement_id.encode()).hexdigest()[:4]
 
 
 def tfvars(e: Engagement, address_space: str, platform: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -15,6 +23,7 @@ def tfvars(e: Engagement, address_space: str, platform: dict[str, Any] | None = 
     rules = p["classification"][e.classification.value]
     return {
         "engagement_id": e.id,
+        "resource_suffix": resource_suffix(e.id),
         "client": e.client,
         "location": e.region,
         "stage": e.stage.value,

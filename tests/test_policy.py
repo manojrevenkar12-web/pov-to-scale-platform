@@ -91,3 +91,13 @@ def test_ipam_gives_every_engagement_its_own_range():
         allocate({"x": "10.64.4.0/23", "y": "10.64.5.0/24"}, [], "10.64.0.0/12", [], 22)
     with pytest.raises(IpamError):
         allocate({}, [str(i) for i in range(5)], "10.64.0.0/20", ["10.64.0.0/22"], 22)
+
+
+def test_resource_names_are_valid_and_distinct():
+    from pts.render import resource_suffix
+
+    a, b = resource_suffix("grid-maintenance-pilot"), resource_suffix("grid-maintenance-pilot-2")
+    assert a != b
+    for s in (a, b, resource_suffix("abc")):
+        assert s.isalnum() and s.islower() and 3 <= len(s) <= 18
+        assert len(f"st{s}ft") <= 24 and len(f"kv-{s}") <= 24

@@ -2,8 +2,7 @@
 # account, Key Vault, identity and budget. Nothing in here is shared with another client.
 
 locals {
-  short = substr(replace(var.engagement_id, "-", ""), 0, 18)
-  ns    = "eng-${var.engagement_id}"
+  ns = "eng-${var.engagement_id}"
 }
 
 resource "azurerm_resource_group" "eng" {
@@ -84,12 +83,12 @@ resource "azurerm_virtual_network_peering" "from_hub" {
 resource "azurerm_cognitive_account" "openai" {
   #checkov:skip=CKV2_AZURE_22:Microsoft-managed keys for PoVs; customer-managed keys are a scaled-stage option (docs/adr/0003)
   #checkov:skip=CKV_AZURE_247:outbound is restricted with an empty allow-list, which is stricter than the check expects
-  name                          = "aoai-${local.short}"
+  name                          = "aoai-${var.resource_suffix}"
   location                      = var.location
   resource_group_name           = azurerm_resource_group.eng.name
   kind                          = "OpenAI"
   sku_name                      = "S0"
-  custom_subdomain_name         = "aoai-${local.short}"
+  custom_subdomain_name         = "aoai-${var.resource_suffix}"
   public_network_access_enabled = false
   local_auth_enabled            = false # Entra ID only, no keys to leak or reuse across clients
   # data loss prevention: the account may not call out to anything (no data sources, no web)
@@ -146,7 +145,7 @@ resource "azurerm_private_endpoint" "openai" {
 
 resource "azurerm_key_vault" "eng" {
   count                         = var.dedicated_key_vault ? 1 : 0
-  name                          = "kv-${local.short}"
+  name                          = "kv-${var.resource_suffix}"
   location                      = var.location
   resource_group_name           = azurerm_resource_group.eng.name
   tenant_id                     = var.tenant_id
@@ -191,7 +190,7 @@ resource "azurerm_storage_account" "finetune" {
   #checkov:skip=CKV_AZURE_33:queue service is not used; blob only
   #checkov:skip=CKV2_AZURE_1:Microsoft-managed keys for PoVs; customer-managed keys are a scaled-stage option
   count                           = var.fine_tuning_storage ? 1 : 0
-  name                            = "stft${local.short}"
+  name                            = "st${var.resource_suffix}ft"
   location                        = var.location
   resource_group_name             = azurerm_resource_group.eng.name
   account_tier                    = "Standard"

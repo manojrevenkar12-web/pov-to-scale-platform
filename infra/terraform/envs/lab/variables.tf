@@ -22,6 +22,7 @@ variable "engagements" {
   description = "Rendered by `pts render-all` into engagements.auto.tfvars.json"
   type = map(object({
     engagement_id           = string
+    resource_suffix         = string
     client                  = string
     location                = string
     stage                   = string

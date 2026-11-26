@@ -27,6 +27,7 @@ module "engagement" {
   for_each = var.engagements
 
   engagement_id           = each.value.engagement_id
+  resource_suffix         = each.value.resource_suffix
   client                  = each.value.client
   location                = each.value.location
   stage                   = each.value.stage

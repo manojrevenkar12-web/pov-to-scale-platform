@@ -8,6 +8,15 @@ variable "engagement_id" {
   }
 }
 
+variable "resource_suffix" {
+  description = "Name-safe unique suffix rendered by `pts render` (<= 18 lowercase letters and digits)"
+  type        = string
+  validation {
+    condition     = can(regex("^[a-z0-9]{3,18}$", var.resource_suffix))
+    error_message = "resource_suffix must be 3-18 lowercase letters and digits."
+  }
+}
+
 variable "client" {
   type = string
 }
