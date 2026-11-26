@@ -1,0 +1,76 @@
+# 12-month lab settings. Every rate here is an ASSUMPTION for a consultancy AI lab, set to plausible
+# values so the designs can be compared on the same luck. They are not Roland Berger figures.
+year:
+  engagements: 96               # client PoVs started in the year (about 8 a month)
+  clients: 40                   # distinct clients; some have several engagements
+  start: 2027-01-04
+
+engagement:
+  classification: {public: 0.10, internal: 0.30, confidential: 0.40, client-restricted: 0.20}
+  pov_weeks: [6, 12]
+  pilot_weeks: [12, 24]
+  budget_eur: [8000, 25000]     # PoV budget
+  usage_of_budget: {median: 0.70, sigma: 0.35}   # planned spend / budget, lognormal
+  runaway: 0.08                 # an agent loop or leaked key multiplies spend from some day on
+  runaway_factor: [3, 10]
+  runaway_noticed_days: 30     # without enforcement, the monthly invoice review catches it
+  legit_overrun_raise: 1.5      # when real demand outgrows the budget, the owner raises it by this factor
+  wins_pilot: 0.35
+  wins_scaled: 0.50
+  bad_request: {non_eu_region: 0.05, model_not_in_region: 0.05, fine_tune_without_consent: 0.06}
+  fine_tuning: 0.15
+
+people:                         # slips when environments are built by hand
+  forgets_teardown: 0.35
+  noticed_after_days: [20, 150]
+  public_endpoint: 0.10
+  reuses_key_across_clients: 0.05
+  popular_cidrs: 24             # hand-picked ranges cluster on a few "usual" /22s
+
+shared:                         # one shared subscription and Azure OpenAI resource for every PoV
+  cross_client_mix: 0.04        # per confidential or client-restricted engagement: shared index or prompt cache
+
+release:                        # the release that is put forward for promotion
+  bad: 0.22                     # carries a regression (eval drop, latency, cost)
+  noise: 0.12                   # measurement noise on latency, errors and cost (relative)
+  eval_noise: 0.02              # absolute noise on the eval score
+
+incidents:
+  per_month_scaled: 0.35        # production incidents per scaled engagement per month, first 6 months
+  bad_release_incidents: 2      # extra incidents when a regression reaches production
+  detect_minutes:
+    burn_rate: [3, 12]          # multi-window burn-rate alerts
+    user_report: [30, 150]      # no SLO alerts: someone notices
+  fix_minutes: [25, 180]
+
+days:
+  ticket_env: [5, 15]           # central IT ticket for a hand-built subscription
+  shared_env: [0.5, 2]
+  platform_env: [0.1, 1]        # provisioning agent PR, policy check, one approval, apply
+  policy_fix: 0.5
+  cidr_clash: 3
+
+weeks:
+  rebuild_for_production: [4, 8]   # hand-built PoV rebuilt in a production subscription
+  migrate_out_of_shared: [3, 6]
+  gate_fix: 1                      # one iteration after the promotion gate says no
+
+idle_eur_per_day: 45            # AKS node pool, APIM, private endpoints, Log Analytics of a forgotten environment
+
+engineer_hours:
+  hand_build: 24
+  hand_teardown: 4
+  shared_onboard: 4
+  platform_review: 1
+  policy_fix: 0.5
+  promotion: 4
+  gate_fix: 6
+  rebuild: 80
+  migrate: 60
+  incident: 3
+  budget_raise: 0.5
+  platform_ops_per_month: 24    # running the platform itself is not free
+
+seeds:
+  dev: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  heldout: [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120]

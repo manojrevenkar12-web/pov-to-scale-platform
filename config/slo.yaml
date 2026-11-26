@@ -1,0 +1,17 @@
+# Service level objectives for engagement services. deploy/prometheus/slo-rules.yaml is generated from
+# this file by `pts slo-rules`; CI fails if it is stale.
+objectives:
+  - name: availability
+    target: 0.995           # 30 days
+    good: sum(rate(gateway_requests_total{code!~"5.."}[{{window}}])) by (engagement)
+    total: sum(rate(gateway_requests_total[{{window}}])) by (engagement)
+  - name: latency
+    target: 0.95            # share of requests under the threshold
+    threshold_seconds: 4
+    good: sum(rate(gateway_request_seconds_bucket{le="4"}[{{window}}])) by (engagement)
+    total: sum(rate(gateway_request_seconds_count[{{window}}])) by (engagement)
+# multi-window, multi-burn-rate alerting (Google SRE Workbook, ch. 5)
+alerts:
+  - {severity: page,   long: 1h, short: 5m,  burn: 14.4}
+  - {severity: page,   long: 6h, short: 30m, burn: 6}
+  - {severity: ticket, long: 3d, short: 6h,  burn: 1}

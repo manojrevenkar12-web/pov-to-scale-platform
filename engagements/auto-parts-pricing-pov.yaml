@@ -1,0 +1,15 @@
+id: auto-parts-pricing-pov
+client: northwind-auto
+owner: lena.vogt@example.com
+cost_center: RB-AUTO-114
+stage: pov
+classification: confidential
+region: germanywestcentral
+start: 2026-11-16
+expires: 2027-01-29
+budget_eur: 18000
+models:
+  - {model: gpt-4o, tokens_per_minute: 60000}
+  - {model: gpt-4o-mini, tokens_per_minute: 150000}
+  - {model: text-embedding-3-large, tokens_per_minute: 120000}
+description: Pricing analyst agent over the client's parts catalogue and competitor price feeds.

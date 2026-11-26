@@ -1,0 +1,429 @@
+{
+  "split": "dev",
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "engagements_per_year": 96,
+  "config_sha256": "73a97f9821a5983add6cc28c8f92f4a2918a997433d73f29062bc09f7e6bd5f5",
+  "metrics": [
+    {
+      "key": "env_days",
+      "label": "Days to a working PoV environment (median)",
+      "unit": "days",
+      "better": "lower"
+    },
+    {
+      "key": "violations",
+      "label": "Requests against residency, model or consent rules that reached Azure",
+      "unit": "per year",
+      "better": "lower"
+    },
+    {
+      "key": "policy_blocks",
+      "label": "Requests stopped by the policy check and fixed first",
+      "unit": "per year",
+      "better": "info"
+    },
+    {
+      "key": "isolation",
+      "label": "Client-data isolation incidents",
+      "unit": "per year",
+      "better": "lower"
+    },
+    {
+      "key": "security",
+      "label": "Public endpoints found on client environments",
+      "unit": "per year",
+      "better": "lower"
+    },
+    {
+      "key": "overrun_keur",
+      "label": "Unapproved spend over budget",
+      "unit": "k\u20ac per year",
+      "better": "lower"
+    },
+    {
+      "key": "idle_keur",
+      "label": "Spend on forgotten environments",
+      "unit": "k\u20ac per year",
+      "better": "lower"
+    },
+    {
+      "key": "blocked_days",
+      "label": "Days a PoV waited on a budget decision",
+      "unit": "per year",
+      "better": "info"
+    },
+    {
+      "key": "weeks_to_scaled",
+      "label": "PoV end to scaled go-live (median)",
+      "unit": "weeks",
+      "better": "lower"
+    },
+    {
+      "key": "bad_in_prod",
+      "label": "Regressed releases that reached production",
+      "unit": "per year",
+      "better": "lower"
+    },
+    {
+      "key": "incidents",
+      "label": "Production incidents, first 6 months at scale",
+      "unit": "per year",
+      "better": "lower"
+    },
+    {
+      "key": "mttr",
+      "label": "Time to restore (mean)",
+      "unit": "minutes",
+      "better": "lower"
+    },
+    {
+      "key": "engineer_hours",
+      "label": "Engineer time, incl. running the platform",
+      "unit": "hours per year",
+      "better": "lower"
+    }
+  ],
+  "designs": [
+    {
+      "design": "ad_hoc",
+      "label": "Hand-built per PoV (ticket)",
+      "metrics": {
+        "env_days": {
+          "mean": 12.92,
+          "ci95": 0.37
+        },
+        "violations": {
+          "mean": 12.9,
+          "ci95": 1.38
+        },
+        "policy_blocks": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "isolation": {
+          "mean": 3.8,
+          "ci95": 0.76
+        },
+        "security": {
+          "mean": 9.0,
+          "ci95": 1.49
+        },
+        "overrun_keur": {
+          "mean": 222.05,
+          "ci95": 48.04
+        },
+        "idle_keur": {
+          "mean": 77.36,
+          "ci95": 11.61
+        },
+        "blocked_days": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "weeks_to_scaled": {
+          "mean": 24.49,
+          "ci95": 0.43
+        },
+        "bad_in_prod": {
+          "mean": 7.9,
+          "ci95": 1.44
+        },
+        "incidents": {
+          "mean": 45.5,
+          "ci95": 6.42
+        },
+        "mttr": {
+          "mean": 191.43,
+          "ci95": 4.01
+        },
+        "engineer_hours": {
+          "mean": 6339.6,
+          "ci95": 256.87
+        },
+        "scaled": {
+          "mean": 19.0,
+          "ci95": 1.89
+        },
+        "gate_stops": {
+          "mean": 0.0,
+          "ci95": 0.0
+        }
+      }
+    },
+    {
+      "design": "shared",
+      "label": "One shared subscription",
+      "metrics": {
+        "env_days": {
+          "mean": 1.25,
+          "ci95": 0.05
+        },
+        "violations": {
+          "mean": 12.9,
+          "ci95": 1.38
+        },
+        "policy_blocks": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "isolation": {
+          "mean": 1.7,
+          "ci95": 0.51
+        },
+        "security": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "overrun_keur": {
+          "mean": 222.05,
+          "ci95": 48.04
+        },
+        "idle_keur": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "blocked_days": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "weeks_to_scaled": {
+          "mean": 23.23,
+          "ci95": 0.41
+        },
+        "bad_in_prod": {
+          "mean": 7.9,
+          "ci95": 1.44
+        },
+        "incidents": {
+          "mean": 45.5,
+          "ci95": 6.42
+        },
+        "mttr": {
+          "mean": 191.43,
+          "ci95": 4.01
+        },
+        "engineer_hours": {
+          "mean": 2819.6,
+          "ci95": 203.45
+        },
+        "scaled": {
+          "mean": 19.0,
+          "ci95": 1.89
+        },
+        "gate_stops": {
+          "mean": 0.0,
+          "ci95": 0.0
+        }
+      }
+    },
+    {
+      "design": "platform",
+      "label": "Platform",
+      "metrics": {
+        "env_days": {
+          "mean": 0.6,
+          "ci95": 0.04
+        },
+        "violations": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "policy_blocks": {
+          "mean": 12.9,
+          "ci95": 1.38
+        },
+        "isolation": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "security": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "overrun_keur": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "idle_keur": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "blocked_days": {
+          "mean": 30.2,
+          "ci95": 4.59
+        },
+        "weeks_to_scaled": {
+          "mean": 19.12,
+          "ci95": 0.63
+        },
+        "bad_in_prod": {
+          "mean": 0.1,
+          "ci95": 0.2
+        },
+        "incidents": {
+          "mean": 37.1,
+          "ci95": 6.36
+        },
+        "mttr": {
+          "mean": 110.09,
+          "ci95": 5.07
+        },
+        "engineer_hours": {
+          "mean": 890.35,
+          "ci95": 41.48
+        },
+        "scaled": {
+          "mean": 19.0,
+          "ci95": 1.89
+        },
+        "gate_stops": {
+          "mean": 15.6,
+          "ci95": 1.71
+        }
+      }
+    },
+    {
+      "design": "platform_no_budgets",
+      "label": "Platform without budgets",
+      "metrics": {
+        "env_days": {
+          "mean": 0.6,
+          "ci95": 0.04
+        },
+        "violations": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "policy_blocks": {
+          "mean": 12.9,
+          "ci95": 1.38
+        },
+        "isolation": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "security": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "overrun_keur": {
+          "mean": 222.05,
+          "ci95": 48.04
+        },
+        "idle_keur": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "blocked_days": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "weeks_to_scaled": {
+          "mean": 19.12,
+          "ci95": 0.63
+        },
+        "bad_in_prod": {
+          "mean": 0.1,
+          "ci95": 0.2
+        },
+        "incidents": {
+          "mean": 37.1,
+          "ci95": 6.36
+        },
+        "mttr": {
+          "mean": 110.09,
+          "ci95": 5.07
+        },
+        "engineer_hours": {
+          "mean": 874.85,
+          "ci95": 41.05
+        },
+        "scaled": {
+          "mean": 19.0,
+          "ci95": 1.89
+        },
+        "gate_stops": {
+          "mean": 15.6,
+          "ci95": 1.71
+        }
+      }
+    },
+    {
+      "design": "platform_no_gate",
+      "label": "Platform without promotion gate",
+      "metrics": {
+        "env_days": {
+          "mean": 0.6,
+          "ci95": 0.04
+        },
+        "violations": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "policy_blocks": {
+          "mean": 12.9,
+          "ci95": 1.38
+        },
+        "isolation": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "security": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "overrun_keur": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "idle_keur": {
+          "mean": 0.0,
+          "ci95": 0.0
+        },
+        "blocked_days": {
+          "mean": 30.2,
+          "ci95": 4.59
+        },
+        "weeks_to_scaled": {
+          "mean": 18.66,
+          "ci95": 0.46
+        },
+        "bad_in_prod": {
+          "mean": 7.9,
+          "ci95": 1.44
+        },
+        "incidents": {
+          "mean": 45.5,
+          "ci95": 6.42
+        },
+        "mttr": {
+          "mean": 110.96,
+          "ci95": 4.15
+        },
+        "engineer_hours": {
+          "mean": 759.55,
+          "ci95": 33.33
+        },
+        "scaled": {
+          "mean": 19.0,
+          "ci95": 1.89
+        },
+        "gate_stops": {
+          "mean": 0.0,
+          "ci95": 0.0
+        }
+      }
+    }
+  ]
+}

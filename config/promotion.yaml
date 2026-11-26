@@ -1,0 +1,19 @@
+# Promotion gate: a release moves pov -> pilot -> scaled only if every check for the target stage
+# passes over the observation window. Thresholds are the lab's assumptions for an LLM service.
+window_hours: 72
+min_requests: 500
+stages:
+  pilot:
+    p95_latency_ms: 4000
+    error_rate: 0.02
+    eval_score: 0.80          # offline eval on the engagement's golden set, 0..1
+    eval_regression: 0.03     # max drop against the current release
+    cost_per_1k_requests_eur: 12.0
+    slo_budget_remaining: 0.0  # not required for pilot
+  scaled:
+    p95_latency_ms: 2500
+    error_rate: 0.005
+    eval_score: 0.85
+    eval_regression: 0.02
+    cost_per_1k_requests_eur: 8.0
+    slo_budget_remaining: 0.5  # at least half the 30-day error budget left

@@ -1,0 +1,111 @@
+/* Design tokens: every colour, size and duration in the dashboard comes from here. */
+:root {
+  color-scheme: light dark;
+  --page: #f4f2ec;
+  --surface-1: #ffffff;
+  --surface-2: #faf9f5;
+  --ink-1: #16181d;
+  --ink-2: #5d6068;
+  --ink-3: #8b8d93;
+  --rule: #e2dfd6;
+  --grid: #e9e7e1;
+  --axis: #bdbab2;
+  --accent: #10305a;
+  --accent-ink: #ffffff;
+  --good-ink: #00701a;
+  --bad-ink: #b3261e;
+  --flow: #10305a;
+
+  /* categorical series, one fixed colour per design (validated with the dataviz palette checker) */
+  --series-platform: #257de0;
+  --series-adhoc: #f47230;
+  --series-shared: #00b894;
+  --series-nobudgets: #f2a600;
+  --series-nogate: #ee7fac;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-md: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 2rem;
+  --text-hero: 3.25rem;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 650;
+  --tracking-tight: -0.025em;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --page-max: 1200px;
+  --hairline: 1px;
+  --rule-strong: 2px;
+
+  --bar-height: 14px;
+  --row-height: 28px;
+  --label-col: 210px;
+  --value-col: 96px;
+  --mark-radius: 4px;
+  --whisker: 1.5px;
+  --cap: 7px;
+  --swatch: 10px;
+  --tile-min: 176px;
+  --panel-min: 220px;
+  --step-min: 128px;
+  --shadow-tooltip: 0 6px 20px rgb(0 0 0 / 0.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #0c0d10;
+    --surface-1: #17191e;
+    --surface-2: #121418;
+    --ink-1: #eeeff1;
+    --ink-2: #9da0a8;
+    --ink-3: #74777f;
+    --rule: #2a2d33;
+    --grid: #2c2f35;
+    --axis: #484b52;
+    --accent: #9dc8f7;
+    --accent-ink: #0c0d10;
+    --good-ink: #53c556;
+    --bad-ink: #eb6263;
+    --flow: #9dc8f7;
+    --series-platform: #338ced;
+    --series-adhoc: #e76624;
+    --series-shared: #00a888;
+    --series-nobudgets: #d28e05;
+    --series-nogate: #e24d8b;
+  }
+}
+
+:root[data-theme="dark"] {
+  --page: #0c0d10;
+  --surface-1: #17191e;
+  --surface-2: #121418;
+  --ink-1: #eeeff1;
+  --ink-2: #9da0a8;
+  --ink-3: #74777f;
+  --rule: #2a2d33;
+  --grid: #2c2f35;
+  --axis: #484b52;
+  --accent: #9dc8f7;
+  --accent-ink: #0c0d10;
+  --good-ink: #53c556;
+  --bad-ink: #eb6263;
+  --flow: #9dc8f7;
+  --series-platform: #338ced;
+  --series-adhoc: #e76624;
+  --series-shared: #00a888;
+  --series-nobudgets: #d28e05;
+  --series-nogate: #e24d8b;
+}

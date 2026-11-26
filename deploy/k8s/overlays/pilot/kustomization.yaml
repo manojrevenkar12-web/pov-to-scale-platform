@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources: [../../base]
+components: [../../components/production]
+labels:
+  - pairs: {platform.ailab/stage: pilot}
+replicas:
+  - name: agent-service
+    count: 2
+configMapGenerator:
+  - name: promotion-gate
+    literals: [TARGET_STAGE=pilot]

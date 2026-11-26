@@ -1,0 +1,16 @@
+id: grid-maintenance-pilot
+client: rheinwerk-energie
+owner: tobias.brandt@example.com
+cost_center: RB-ENER-207
+stage: pilot
+classification: client-restricted
+region: swedencentral
+start: 2026-10-05
+expires: 2027-03-26
+budget_eur: 64000
+models:
+  - {model: gpt-4.1, tokens_per_minute: 80000}
+  - {model: gpt-4.1-mini, tokens_per_minute: 200000}
+fine_tuning: true
+client_consent_fine_tuning: true
+description: Maintenance-report triage for grid assets; small model fine-tuned on the client's work orders.

@@ -1,0 +1,104 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - run: ruff check src tests && ruff format --check src tests
+      - run: pytest -q
+      - name: policy on every engagement and static Terraform rules
+        run: pts check
+      - name: generated files are current
+        run: |
+          pts render-all --check
+          pts slo-rules --check
+          pts lab report --check
+      - name: dev lab years are reproducible
+        run: |
+          pts lab sim --split dev
+          git diff --exit-code -- results/dev.json
+      - name: held-out years stay locked
+        run: |
+          test -f results/HELDOUT.lock
+          if pts lab sim --split heldout; then echo "held-out split ran twice" && exit 1; fi
+
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
+      - run: terraform fmt -check -recursive infra/terraform
+      - name: validate against the pinned azurerm provider
+        working-directory: infra/terraform/envs/lab
+        run: |
+          terraform init -backend=false -input=false
+          terraform validate
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Checkov
+        run: |
+          pip install checkov
+          checkov -d infra/terraform --framework terraform --compact --quiet
+
+  kubernetes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: tools
+        run: |
+          curl -sL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.7.1/kustomize_v5.7.1_linux_amd64.tar.gz | tar xz
+          curl -sL https://github.com/yannh/kubeconform/releases/download/v0.7.0/kubeconform-linux-amd64.tar.gz | tar xz
+          curl -sL https://github.com/prometheus/prometheus/releases/download/v3.5.0/prometheus-3.5.0.linux-amd64.tar.gz | tar xz --strip-components=1 prometheus-3.5.0.linux-amd64/promtool
+      - name: build and validate every overlay
+        run: |
+          for d in deploy/k8s/overlays/pov deploy/k8s/overlays/pilot deploy/k8s/overlays/scaled deploy/k8s/gateway; do
+            ./kustomize build "$d" > "/tmp/$(basename $d).yaml"
+          done
+          ./kubeconform -strict -summary -kubernetes-version 1.31.0 /tmp/*.yaml
+      - name: alert rules and their unit tests
+        run: |
+          ./promtool check rules deploy/prometheus/slo-rules.yaml
+          ./promtool test rules tests/prometheus/slo-rules-test.yaml
+
+  dashboard:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: dashboard/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t pov-to-scale:ci .
+      - name: image runs as non-root and the CLI works
+        run: |
+          test "$(docker inspect -f '{{.Config.User}}' pov-to-scale:ci)" = "10001"
+          docker run --rm --entrypoint pts pov-to-scale:ci check --today 2026-11-26

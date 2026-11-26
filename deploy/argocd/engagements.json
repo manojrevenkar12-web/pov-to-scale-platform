@@ -1,0 +1,23 @@
+[
+  {
+    "id": "auto-parts-pricing-pov",
+    "stage": "pov",
+    "namespace": "eng-auto-parts-pricing-pov",
+    "client": "northwind-auto",
+    "classification": "confidential"
+  },
+  {
+    "id": "grid-maintenance-pilot",
+    "stage": "pilot",
+    "namespace": "eng-grid-maintenance-pilot",
+    "client": "rheinwerk-energie",
+    "classification": "client-restricted"
+  },
+  {
+    "id": "rb-knowledge-agents-scaled",
+    "stage": "scaled",
+    "namespace": "eng-rb-knowledge-agents-scaled",
+    "client": "roland-berger-internal",
+    "classification": "internal"
+  }
+]

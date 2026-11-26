@@ -1,0 +1,48 @@
+# Platform rules. Every engagement request is checked against these before anything is provisioned.
+# Values are the platform team's policy, not Azure limits.
+
+hub:
+  address_space: 10.64.0.0/12      # spokes get a /22 each from here; the hub keeps 10.64.0.0/22
+  hub_prefix: 10.64.0.0/22
+  spoke_prefix_length: 22
+
+regions:
+  # EU regions with the Azure OpenAI models the lab uses. Client-restricted data stays in the EU.
+  allowed: [germanywestcentral, swedencentral, westeurope, francecentral]
+  eu: [germanywestcentral, swedencentral, westeurope, francecentral]
+  models:
+    germanywestcentral: [gpt-4o, gpt-4o-mini, text-embedding-3-large]
+    swedencentral: [gpt-4o, gpt-4o-mini, gpt-4.1, gpt-4.1-mini, text-embedding-3-large]
+    westeurope: [gpt-4o, gpt-4o-mini, text-embedding-3-large]
+    francecentral: [gpt-4o-mini, text-embedding-3-large]
+
+stages:
+  pov:
+    max_weeks: 12
+    max_budget_eur: 25000
+    replicas: 1
+    sla: none
+  pilot:
+    max_weeks: 26
+    max_budget_eur: 80000
+    replicas: 2
+    sla: business-hours
+  scaled:
+    max_weeks: 156
+    max_budget_eur: 600000
+    replicas: 3
+    sla: 24x7
+
+budget:
+  alert_at: 0.8          # notify the engagement owner
+  block_at: 1.0          # the gateway refuses new requests
+  grace_requests: 0      # requests allowed past the block (none)
+
+classification:
+  # what each data class may do
+  public:            {fine_tuning: true,  eu_only: false}
+  internal:          {fine_tuning: true,  eu_only: true}
+  confidential:      {fine_tuning: consent, eu_only: true}
+  client-restricted: {fine_tuning: consent, eu_only: true, dedicated_key_vault: true}
+
+required_tags: [engagement, client, owner, stage, classification, expires, cost-center]

@@ -1,0 +1,15 @@
+id: rb-knowledge-agents-scaled
+client: roland-berger-internal
+owner: ai-lab-platform@example.com
+cost_center: RB-AILAB-001
+stage: scaled
+classification: internal
+region: westeurope
+start: 2026-06-01
+expires: 2028-05-31
+budget_eur: 420000
+models:
+  - {model: gpt-4o, tokens_per_minute: 300000}
+  - {model: gpt-4o-mini, tokens_per_minute: 600000}
+  - {model: text-embedding-3-large, tokens_per_minute: 350000}
+description: Internal research agents over studies and project archives for consultants.

@@ -1,0 +1,72 @@
+# One Argo CD Application per engagement, generated from deploy/argocd/engagements.json (rendered by
+# `pts render-all` from engagements/*.yaml). Promoting an engagement is a one-line change of its
+# stage in Git; the stage picks the overlay, and pilot/scaled syncs run the promotion gate first.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: engagements
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/manojrevenkar12-web/pov-to-scale-platform
+        revision: main
+        files:
+          - path: deploy/argocd/engagements.json
+  template:
+    metadata:
+      name: "eng-{{ .id }}"
+      labels:
+        platform.ailab/stage: "{{ .stage }}"
+        platform.ailab/client: "{{ .client }}"
+    spec:
+      project: engagements
+      source:
+        repoURL: https://github.com/manojrevenkar12-web/pov-to-scale-platform
+        targetRevision: main
+        path: "deploy/k8s/overlays/{{ .stage }}"
+        kustomize:
+          images:
+            - "ailabacr.azurecr.io/agent-service=ailabacr.azurecr.io/agent-service:{{ .id }}"
+          patches:
+            - target: {kind: Deployment, name: agent-service}
+              patch: |-
+                - op: replace
+                  path: /spec/template/spec/containers/0/env/1/value
+                  value: "{{ .id }}"
+            - target: {kind: Job, name: promotion-gate}
+              patch: |-
+                - op: replace
+                  path: /spec/template/spec/containers/0/env/0/value
+                  value: "{{ .id }}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{ .namespace }}"
+      syncPolicy:
+        automated: {prune: true, selfHeal: true}
+        syncOptions: [CreateNamespace=true, ServerSideApply=true]
+        managedNamespaceMetadata:
+          labels:
+            platform.ailab/engagement: "{{ .id }}"
+            platform.ailab/classification: "{{ .classification }}"
+            pod-security.kubernetes.io/enforce: restricted
+---
+# Engagement apps may only deploy into eng-* namespaces and may not create cluster-wide objects.
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: engagements
+  namespace: argocd
+spec:
+  sourceRepos: [https://github.com/manojrevenkar12-web/pov-to-scale-platform]
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: "eng-*"
+  clusterResourceWhitelist: []
+  namespaceResourceBlacklist:
+    - {group: "", kind: ResourceQuota}
+    - {group: "", kind: LimitRange}
+    - {group: rbac.authorization.k8s.io, kind: Role}
+    - {group: rbac.authorization.k8s.io, kind: RoleBinding}

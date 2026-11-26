@@ -1,0 +1,6 @@
+*
+!pyproject.toml
+!src/
+!config/
+!engagements/
+!runbooks/

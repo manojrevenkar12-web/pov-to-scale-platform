@@ -1,0 +1,6 @@
+# What pilot and scaled add over a PoV: a disruption budget and the promotion gate before every sync.
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - pdb.yaml
+  - promotion-gate.yaml

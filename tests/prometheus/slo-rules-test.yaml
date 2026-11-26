@@ -1,0 +1,41 @@
+# promtool test rules tests/prometheus/slo-rules-test.yaml
+rule_files:
+  - ../../deploy/prometheus/slo-rules.yaml
+evaluation_interval: 1m
+tests:
+  - name: 10% errors pages within the hour
+    interval: 1m
+    input_series:
+      - series: 'gateway_requests_total{engagement="auto-parts-pricing-pov",code="200"}'
+        values: '0+90x180'
+      - series: 'gateway_requests_total{engagement="auto-parts-pricing-pov",code="500"}'
+        values: '0+10x180'
+    alert_rule_test:
+      - eval_time: 70m
+        alertname: SLOAvailabilityBurn1h
+        exp_alerts:
+          - exp_labels: {severity: page, slo: availability, engagement: auto-parts-pricing-pov}
+            exp_annotations:
+              summary: 'auto-parts-pricing-pov burns the availability error budget 14.4x too fast'
+              runbook_url: runbooks/slo-availability.md
+      - eval_time: 70m
+        alertname: SLOAvailabilityBurn6h
+        exp_alerts:
+          - exp_labels: {severity: page, slo: availability, engagement: auto-parts-pricing-pov}
+            exp_annotations:
+              summary: 'auto-parts-pricing-pov burns the availability error budget 6x too fast'
+              runbook_url: runbooks/slo-availability.md
+  - name: 0.2% errors stay quiet
+    interval: 1m
+    input_series:
+      - series: 'gateway_requests_total{engagement="grid-maintenance-pilot",code="200"}'
+        values: '0+998x180'
+      - series: 'gateway_requests_total{engagement="grid-maintenance-pilot",code="500"}'
+        values: '0+2x180'
+    alert_rule_test:
+      - eval_time: 170m
+        alertname: SLOAvailabilityBurn1h
+        exp_alerts: []
+      - eval_time: 170m
+        alertname: SLOAvailabilityBurn6h
+        exp_alerts: []

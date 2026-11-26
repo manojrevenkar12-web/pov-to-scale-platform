@@ -1,0 +1,5 @@
+{
+  "auto-parts-pricing-pov": "10.64.4.0/22",
+  "grid-maintenance-pilot": "10.64.8.0/22",
+  "rb-knowledge-agents-scaled": "10.64.12.0/22"
+}
