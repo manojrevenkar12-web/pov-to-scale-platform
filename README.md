@@ -80,7 +80,7 @@ $ pts agent "PoV for client Acme, gpt-4.1, €10k, 6 weeks, Frankfurt, personal 
 
 ## Tests
 
-- Python: 51 pytest cases. They cover the policy rules, address allocation, gateway isolation, redaction, budgets, rate limits and fallback, the promotion gate (from file and from Prometheus), the agent (including a prompt-injection case), triage, lab determinism and ablations, and generated-file freshness.
+- Python: 52 pytest cases. They cover the policy rules, address allocation, gateway isolation, redaction, budgets, rate limits and fallback, the promotion gate (from file and from Prometheus), the agent (including a prompt-injection case), triage, lab determinism and ablations, and generated-file freshness.
 - Prometheus: rule unit tests. 10% errors page within the hour; 0.2% stays quiet.
 - Dashboard: 4 Vitest cases for the loading, error/retry, empty and table states.
 
